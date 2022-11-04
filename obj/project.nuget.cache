@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "wilArESt2b1jdSUn3+VhWeIT1Q5WPPn7V6gD09RKQ+2zo+i36YfZSZsLhQcPhSvCm7IWu7a0eAslof5Cte9+xw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\caspe\\Dropbox\\My PC (DESKTOP-GJ0HJAR)\\Desktop\\Experis Academy\\solution\\solution\\solution.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\caspe\\.nuget\\packages\\extreme.numerics\\8.1.9\\extreme.numerics.8.1.9.nupkg.sha512",
+    "C:\\Users\\caspe\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\caspe\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "C:\\Users\\caspe\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "C:\\Users\\caspe\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
