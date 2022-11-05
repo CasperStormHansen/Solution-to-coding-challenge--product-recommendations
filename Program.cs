@@ -1,12 +1,12 @@
 ﻿using Extreme.Mathematics;
 using Extreme.Statistics.Tests;
-using static System.Console;
 using static Helper;
 
-// *load data from files*
+// *initialization: load data from files and set mode*
 Product[] products = FileLines("Products.txt").Select(line => new Product(line)).ToArray();
 User[] users = FileLines("Users.txt").Select(line => new User(line, products)).ToArray();
 foreach (string line in FileLines("CurrentUserSession.txt")) User.LoadCurrentUserSession(line, products, users);
+SetMode(args); // whether the program runs in user output mode (default) or log mode is determined by argument given in console
 
 // *part one of challenge*
 foreach (Product product in products) product.CalculateNumberOfPurchases(users);
@@ -14,12 +14,12 @@ foreach (Product product in products) product.CalculatePopularity();
 Product[] productsByPopularity = products.OrderByDescending(product => product.Popularity).ToArray();
 
 // output
-WriteLine("\nVelkommen til ExperisFlix! De mest populære film lige nu er");
+UserOutput("\nVelkommen til ExperisFlix! De mest populære film lige nu er");
 for (int i = 0; i < Math.Min(3, productsByPopularity.Count()); i++)
 {
-    WriteLine($" {productsByPopularity[i].Name}");
+    UserOutput($" {productsByPopularity[i].Name}");
 }
-WriteLine();
+UserOutput();
 
 // *part two of challenge*
 Product.CalculateDescriptiveStats(products);
@@ -54,12 +54,12 @@ foreach (User user in users)
             .ToArray();
 
         // output
-        WriteLine($"Hej {user.Name}! Hvis du er interesseret i {user.CurrentSession.Name}, skulle du også ta' at tjekke disse film ud:");
+        UserOutput($"Hej {user.Name}! Hvis du er interesseret i {user.CurrentSession.Name}, skulle du også ta' at tjekke disse film ud:");
         for (int i = 0; i < Math.Min(3, productsByUserScore.Count()); i++)
         {
-            WriteLine($"  {productsByUserScore[i].Name}");
+            UserOutput($"  {productsByUserScore[i].Name}");
         }
-        WriteLine();
+        UserOutput();
     }
 }
 
@@ -114,8 +114,10 @@ public class Product
 
     public void CalculatePopularity()
     {
-        if (MaxNumberOfPurchases > 0) MaxNumberOfPurchases = 1; // to avoid division by 0 (here and everywhere else, if divisor is changed like this, every dividend is 0, so the the desired result is achieved)
-        Popularity = Rating + 5 * ((double)NumberOfPurchases / MaxNumberOfPurchases);
+        if (MaxNumberOfPurchases == 0) MaxNumberOfPurchases = 1; // to avoid division by 0 (here and everywhere else, if divisor is changed like this, every dividend is 0, so the the desired result is achieved)
+        double purchaseScore = 5 * ((double)NumberOfPurchases / MaxNumberOfPurchases); 
+        Popularity = Rating + purchaseScore;
+        LogOutput($"{Name,-44} {Rating,4:N1} {purchaseScore,4:N1} {Popularity,5:N1}");
     }
 
     public static void CalculateDescriptiveStats(Product[] products)
@@ -291,15 +293,41 @@ public class User
                 + CurrentSession!.ViewersInCommonScore![product] // score component 5
             )
         );
-        // foreach (Product product in products)
-        // {
-        //     WriteLine($"{this.Name,-8} {product.Name,-44} {(double)product.Rating,-5} {PriceScore![product],-20} {YearScore![product],-20} {GenreScore![product],-20} {product.ViewersInCommonScore![CurrentSession!],-5}");
-        // }
+
+        LogOutput($"\n{this.Name,-44} {"(1)",4:N1} {"(2)",4:N1} {"(3)",4:N1} {"(4)",4:N1} {"(5)",4:N1} {"(T)",5:N1}");
+        LogOutput("---------------------------------------------------------------------------");
+
+        foreach (Product product in products)
+        {
+            LogOutput($"{product.Name,-44} {product.Rating,4:N1} {PriceScore![product],4:N1} {YearScore![product],4:N1} {GenreScore![product],4:N1} {product.ViewersInCommonScore![CurrentSession!],4:N1} {OverallScore![product],5:N1}");
+        }
     }
 }
 
 public class Helper
 {
+    public static bool LogMode;
+
+    public static void SetMode(string[] args)
+    {
+        if (args.Count() == 1 && args[0] == "-logmode")
+        {
+            LogMode = true;
+            LogOutput($"\n{"Popularitet",-44} {"(1)",4:N1} {"(2)",4:N1} {"(T)",5:N1}");
+            LogOutput("------------------------------------------------------------");
+        }
+    }
+
+    public static void LogOutput(string output = "")
+    {
+        if (LogMode) Console.WriteLine(output);
+    }
+
+    public static void UserOutput(string output = "")
+    {
+        if (!LogMode) Console.WriteLine(output);
+    }
+
     public static IEnumerable<string> FileLines(string fileName)
     {
         return File.ReadLines(Path.Combine(Directory.GetCurrentDirectory(), fileName));
