@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Extreme.Numerics" Version="8.1.9" />
+    <!-- <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference> -->
   </ItemGroup>
 
 </Project>

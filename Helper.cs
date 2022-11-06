@@ -1,8 +1,8 @@
 namespace Shared;
 
-public class IO
+public static class Helper
 {
-    public static bool LogMode;
+    static bool LogMode;
 
     public static void SetMode(string[] args)
     {
@@ -40,5 +40,15 @@ public class IO
     {
         if (String.IsNullOrEmpty(semiColonList)) return new Product[0];
         return semiColonList.Split(';').Select(n => Array.Find(products, p => p.ID == int.Parse(n))).ToArray()!;
+    }
+
+    public static Dictionary<Product, double> MultiplySoMaxIsFive(Dictionary<Product, double> score)
+    {
+        double max = score.Values.Max();
+        if (max == 0) max = 1; // to avoid division by 0
+        return score.ToDictionary(
+            item => item.Key,
+            item => item.Value * 5 / max
+        );
     }
 }

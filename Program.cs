@@ -1,5 +1,5 @@
 ﻿using Shared;
-using static Shared.IO;
+using static Shared.Helper;
 
 // sets the output mode: default or log mode (if the program is run with the argument "-logmode")
 SetMode(args);
@@ -10,7 +10,7 @@ Product[] products = FileLines("Products.txt").Select(line => new Product(line))
 User[] users = FileLines("Users.txt").Select(line => new User(line, products)).ToArray();
 foreach (string line in FileLines("CurrentUserSession.txt")) User.LoadCurrentUserSession(line, products, users);
 
-// calculations scores for part one of the challenge, orders the products by total score, and (if in log mode) outputs log info
+// calculates scores for part one of the challenge, orders the products by total score, and (if in log mode) outputs log info
 foreach (Product product in products) product.CalculateNumberOfPurchases(users);
 foreach (Product product in products) product.CalculatePopularity();
 Product[] productsByPopularity = products.OrderByDescending(product => product.Popularity).ToArray();
@@ -19,7 +19,7 @@ Product[] productsByPopularity = products.OrderByDescending(product => product.P
 UserOutput("\nVelkommen til ExperisFlix! De mest populære film lige nu er");
 for (int i = 0; i < Math.Min(3, productsByPopularity.Count()); i++)
 {
-    UserOutput($" {productsByPopularity[i].Name}");
+    UserOutput($"  {productsByPopularity[i].Name}");
 }
 UserOutput();
 
@@ -33,15 +33,15 @@ foreach (User user in users)
 {
     if (user.CurrentSession is not null)
     {
-        // calculates score component 2, and (if in logmode) outputs result of price sensitivity test
+        // calculates score component 2, and (if in log mode) outputs result of price sensitivity test
         user.DeterminePriceSensitivity(products, Product.MeanPrice, Product.PriceStandardDeviation);
         user.CalculatePriceScore(products, Product.MaxPrice, Product.MinPrice);
 
-        // calculates score component 3, and (if in logmode) outputs result of year sensitivity test
+        // calculates score component 3, and (if in log mode) outputs result of year sensitivity test
         user.DetermineYearSensitivity(products, Product.MeanYear, Product.YearStandardDeviation);
         user.CalculateYearScore(products, Product.MaxYear, Product.MinYear);
 
-        // calculates score component 4, and (if in logmode) outputs genre preferences
+        // calculates score component 4, and (if in log mode) outputs genre preferences
         user.CalculateGenrePreference(Product.Genres);
         user.CalculateGenreScore(products);
 
@@ -61,6 +61,3 @@ foreach (User user in users)
         UserOutput();
     }
 }
-
-// check code for todos
-// linter: https://dev.to/srmagura/c-linting-and-formatting-tools-in-2021-bna

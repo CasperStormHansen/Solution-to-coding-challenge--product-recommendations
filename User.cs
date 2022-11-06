@@ -1,16 +1,16 @@
 using Extreme.Mathematics;
 using Extreme.Statistics.Tests;
-using static Shared.IO;
+using static Shared.Helper;
 
 namespace Shared;
 
 public class User
 {
-    public int ID;
+    public readonly int ID;
 
-    public string Name;
+    public readonly string Name;
 
-    public Product[] Viewed, Purchased;
+    public readonly Product[] Viewed, Purchased;
 
     public Product? CurrentSession;
 
@@ -55,7 +55,7 @@ public class User
         }
     }
 
-    public void DeterminePriceSensitivity(Product[] products, double mean, double standardDeviation) // requires more testing
+    public void DeterminePriceSensitivity(Product[] products, double mean, double standardDeviation)
     {
         double[] purchasedPrices = Purchased.Select(p => (double)p.Price).ToArray();
         PriceSensitivity = Sensitivity(purchasedPrices, mean, standardDeviation);
@@ -70,7 +70,7 @@ public class User
         );
     }
 
-    public void DetermineYearSensitivity(Product[] products, double mean, double standardDeviation) // requires more testing
+    public void DetermineYearSensitivity(Product[] products, double mean, double standardDeviation)
     {
         double[] purchasedYears = Purchased.Select(p => (double)p.Year).ToArray();
         YearSensitivity = Sensitivity(purchasedYears, mean, standardDeviation);
@@ -89,10 +89,6 @@ public class User
         if (sample.Count() < 2) return 0;
         var sampleVector = Vector.Create(sample);
         OneSampleZTest lowSampleMeanTest = new OneSampleZTest(sampleVector, mean, standardDeviation, HypothesisType.OneTailedLower);
-        // WriteLine("Test statistic: {0:F4}", cheapTest.Statistic);
-        // WriteLine("P-value:        {0:F4}", cheapTest.PValue);
-        // WriteLine("Significance level:     {0:F2}", cheapTest.SignificanceLevel);
-        // WriteLine("Reject null hypothesis? {0}", cheapTest.Reject() ? "yes" : "no");
         if (lowSampleMeanTest.Reject(.125)) return -1; // the sample's mean is lower than the population's mean to a statistically significant extent
         OneSampleZTest highSampleMeanTest = new OneSampleZTest(sampleVector, mean, standardDeviation, HypothesisType.OneTailedUpper);
         if (highSampleMeanTest.Reject(.125)) return 1; // the sample's mean is higher than the population's mean to a statistically significant extent
@@ -128,11 +124,11 @@ public class User
         if (divisor == 0) divisor = 1; // to avoid division by 0
         GenrePreference = genres.ToDictionary(
             genre => genre,
-            genre => (double)
+            genre =>
             (
-                (0.5 * Viewed.Count(product => product.Keywords.Contains(genre))
+                0.5 * Viewed.Count(product => product.Keywords.Contains(genre))
                 + 0.5 * Purchased.Count(product => product.Keywords.Contains(genre))
-                + ((CurrentSession is not null && CurrentSession.Keywords.Contains(genre)) ? 5 : 0))
+                + ((CurrentSession is not null && CurrentSession.Keywords.Contains(genre)) ? 5 : 0)
             ) / divisor
         );
 
@@ -146,10 +142,11 @@ public class User
 
     public void CalculateGenreScore(Product[] products)
     {
-        GenreScore = products.ToDictionary(
+        Dictionary<Product, double> tentativeGenreScore = products.ToDictionary(
             product => product,
             product => 5 * product.Keywords.Select(genre => GenrePreference![genre]).Sum() / product.Keywords.Count()
         );
+        GenreScore = MultiplySoMaxIsFive(tentativeGenreScore);
     }
 
     public void CalculateOverallScore(Product[] products)
@@ -161,7 +158,7 @@ public class User
                 + PriceScore![product] // score component 2
                 + YearScore![product] // score component 3
                 + GenreScore![product] // score component 4
-                + CurrentSession!.ViewersInCommonScore![product] // score component 5
+                + CurrentSession!.BuyersInCommonScore![product] // score component 5
             )
         );
 
@@ -169,7 +166,7 @@ public class User
         LogOutput("-------------------------------------------------------------------------------");
         foreach (Product product in products)
         {
-            LogOutput($"{product.ID,2}  {product.Name,-44}  {product.Rating,3:N1}  {PriceScore![product],3:N1}  {YearScore![product],3:N1}  {GenreScore![product],3:N1}  {product.ViewersInCommonScore![CurrentSession!],3:N1}  {OverallScore![product],4:N1}");
+            LogOutput($"{product.ID,2}  {product.Name,-44}  {product.Rating,3:N1}  {PriceScore![product],3:N1}  {YearScore![product],3:N1}  {GenreScore![product],3:N1}  {CurrentSession!.BuyersInCommonScore![product],3:N1}  {OverallScore![product],4:N1}");
         }
     }
 }

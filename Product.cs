@@ -1,18 +1,22 @@
-using static Shared.IO;
+using static Shared.Helper;
 
 namespace Shared;
 
 public class Product
 {
-    public int ID, Year, NumberOfPurchases;
+    public readonly int ID, Year;
 
-    public string Name;
+    public int NumberOfPurchases;
 
-    public decimal Price;
+    public readonly string Name;
 
-    public double Rating, Popularity;
+    public readonly decimal Price;
 
-    public Dictionary<Product, double>? ViewersInCommonScore;
+    public readonly double Rating;
+
+    public double Popularity;
+
+    public Dictionary<Product, double>? BuyersInCommonScore;
 
     public string[] Keywords;
 
@@ -44,10 +48,7 @@ public class Product
 
     public void CalculateNumberOfPurchases(User[] users)
     {
-        foreach (User user in users)
-        {
-            if (user.Purchased.Contains(this)) NumberOfPurchases++;
-        }
+        NumberOfPurchases = users.Count(user => (user.Purchased.Contains(this)));
         if (NumberOfPurchases > MaxNumberOfPurchases) MaxNumberOfPurchases = NumberOfPurchases;
     }
 
@@ -64,30 +65,25 @@ public class Product
         MaxPrice = products.Select(p => p.Price).Max();
         MinPrice = products.Select(p => p.Price).Min();
         MeanPrice = products.Select(p => (double)p.Price).Average();
-        double sum1 = (double)products.Sum(d => ((double)d.Price - MeanPrice) * ((double)d.Price - MeanPrice));
+        double sum1 = products.Sum(d => ((double)d.Price - MeanPrice) * ((double)d.Price - MeanPrice));
         PriceStandardDeviation = Math.Sqrt(sum1 / products.Count());
 
         MaxYear = products.Select(p => p.Year).Max();
         MinYear = products.Select(p => p.Year).Min();
         MeanYear = products.Select(p => (double)p.Year).Average();
-        double sum2 = (double)products.Sum(d => (d.Year - MeanYear) * (d.Year - MeanYear));
+        double sum2 = products.Sum(d => (d.Year - MeanYear) * (d.Year - MeanYear));
         YearStandardDeviation = Math.Sqrt(sum2 / products.Count());
 
         foreach (Product product in products) Genres = Genres.Union(product.Keywords).ToArray();
     }
 
-    public void CalculateBuyersInCommonScore(Product[] products, User[] users) // do test with user histories that result in non-extreme values
+    public void CalculateBuyersInCommonScore(Product[] products, User[] users)
     {
-        Dictionary<Product, int> preNormalizedBuyersInCommonScore = products.ToDictionary(
+        Dictionary<Product, double> tentativeBuyersInCommonScore = products.ToDictionary(
             product => product,
-            product => users.Count(user => (user.Purchased.Contains(product) && user.Purchased.Contains(this)))
+            product => (double)users.Count(user => (user.Purchased.Contains(product) && user.Purchased.Contains(this) && product != this))
         );
-        double maxPreNormalizedBuyersInCommonScore = preNormalizedBuyersInCommonScore.Values.Max();
-        if (maxPreNormalizedBuyersInCommonScore == 0) maxPreNormalizedBuyersInCommonScore = 1; // to avoid division by 0
-        ViewersInCommonScore = preNormalizedBuyersInCommonScore.ToDictionary(
-            item => item.Key,
-            item => (double)item.Value * 5 / maxPreNormalizedBuyersInCommonScore
-        );
+        BuyersInCommonScore = MultiplySoMaxIsFive(tentativeBuyersInCommonScore);
     }
 
     public override int GetHashCode() // allows products to be keys in dictionaries
