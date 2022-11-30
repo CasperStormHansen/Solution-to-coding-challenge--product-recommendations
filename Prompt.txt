@@ -1,0 +1,60 @@
+Introduktion
+
+Kære ansøger,
+
+Tak for din tid og den interesse, du har vist i vores virksomhed. Det betyder meget. Du har gennemført multiple-choice testen, og derfor er du kvalificeret til at løse følgende case.
+
+For at sikre en fair vurdering vil din identitet forblive anonym for dommerne på casen. Vi har ikke brug for dit CV eller en motiveret ansøgning, da den case, du indsender, vil være det første trin i denne proces.
+
+Din caseløsning skal uploades til Innoflow-platformen i PDF-format.
+
+Angiv venligst ikke dit navn i filen, da vi ønsker at opretholde total anonymitet i evalueringsprocessen.
+
+ 
+
+Caseopgave
+
+Produkt (film) Anbefalinger:
+
+Din arbejdsgiver har netop lanceret en ny onlinebutik for deres produkter (film). Nu vil de gerne implementere funktionen: "anbefalet produkt" til kunderne, når de gennemser kataloget.
+
+I det eksisterende system har webbutikken sporet, hvilke produkter en given bruger kigger på og hvilke produkter brugeren har købt (Users.txt).
+
+For hver kunde (Users.txt):
+
+Et navn
+En liste over viste produkter
+En liste over købte produkter
+
+Systemet har følgende for hvert produkt (Products.txt):
+
+Et navn
+En liste over søgeord (genre)
+En gennemsnitlig brugeranmeldelse (vurdering 0-5)
+En pris
+Din løsning skal læse de relevante data for de leverede filer for at hjælpe med at komme med anbefalinger til de kunder, der besøger webstedet.
+
+1. Brug de eksisterende data til at lave et system, der opretter en liste over "seneste populære produkter" (høj indkøbsrate og/eller høj brugeranmeldelse).
+
+Du kan bestemme præcis, hvor mange produkter der skal vises, men 2 til 3 er et godt udgangspunkt.
+
+2. For det andet, skal du oprette en løsning til at anbefale individuelle produkter til en bruger baseret på deres aktuelle sessionsdata. CurrentUserSession.txt angiver, hvilket produkt brugeren i øjeblikket kigger på.
+
+Tænk på "ofte købt sammen med"-funktionen på Amazon eller anbefalinger efter at have set en film på Netflix.
+
+(Brugere, der kan lide produkter fra en given genre, vil normalt lide flere produkter fra den samme genre.)
+
+I begge dele behøver systemet kun at være en simpel tekstgrænseflade (console/terminal). Det skal læse fra filerne og vise de relevante output for hver bruger i CurrentUserSession.txt.
+
+Du behøver ikke at skrive nogen webstedskode eller brugergrænseflader.
+
+ 
+Du har fået fire filer: (Alle filer findes i zip-filen "Movie Product Data")
+
+Products.txt 
+Users.txt
+CurrentUserSession.txt
+ README.txt (beskriver andre filers opbygning)
+Bemærk: Resultaterne fra denne løsning er subjektive. Der er ikke et "korrekt" svar.
+
+Løsninger vil blive individuelt evalueret for præstation, relevans af forslag samt pænhed og professionalisme af kildekoden.

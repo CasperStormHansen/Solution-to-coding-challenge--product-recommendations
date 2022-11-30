@@ -1,0 +1,26 @@
+[Output i default mode]
+
+Velkommen til ExperisFlix! De mest populære film lige nu er
+  Cloudy with a Chance of Meatballs 2
+  Chris Rock: Bigger & Blacker
+  Ip Man 2
+
+Hej Olav! Hvis du er interesseret i Manhunter, skulle du også ta' at tjekke disse film ud:
+  GoldenEye
+  The thing
+  Dr. Terror's House of Horrors
+
+Hej Tage! Hvis du er interesseret i Tequila Sunrise, skulle du også ta' at tjekke disse film ud:
+  La La Land
+  GoldenEye
+  Speed 2: Cruise Control
+
+Hej Ida! Hvis du er interesseret i Batman Forever, skulle du også ta' at tjekke disse film ud:
+  La La Land
+  GoldenEye
+  Harry Potter and the Order of the Phoenix
+
+Hej Mia! Hvis du er interesseret i The thing, skulle du også ta' at tjekke disse film ud:
+  Dr. Terror's House of Horrors
+  GoldenEye
+  Ip Man 2
